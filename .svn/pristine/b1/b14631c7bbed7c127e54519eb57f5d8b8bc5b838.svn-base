@@ -1,0 +1,39 @@
+<?php
+
+//$precompte = new ClassePrecompte($id);
+$tatolPlein=($precompte->getNbArguPerso())*$precompte->getComArgusTxPlein();
+$tatolBinome=($precompte->getNbArguBinome())*$precompte->getComArgusTxReduit(); 
+$MontantTotal=$tatolPlein+$tatolBinome 
+
+?>
+
+ <table class="table">
+            
+            <tbody>
+                <tr >
+                    <td colspan="4" style="text-align: center">COMMISSION SUR FO</td>
+                </tr>
+                <tr>
+                    <td>taux</td>
+                    <td>plein <?=$precompte->getComArgusTxPlein()?> &euro;</td>
+                    <td>reduit/binome <?=$precompte->getComArgusTxReduit()?> &euro;</td>
+                    <td></td>
+                   
+                </tr>
+                <tr>
+                    <td>Nbe de FO pay&eacute;es</td>
+                    <td><?=$precompte->getNbArguPerso(); ?></td>
+                    <td><?=$precompte->getNbArguBinome(); ?></td>
+                    <td>TOTAL</td>
+                </tr>
+                <tr>
+                    <td>total</td>
+                    <td><?=$tatolPlein?></td>
+                    <td><?=$tatolBinome?></td>
+                    <td><?=$MontantTotal ?></td>
+                    
+                </tr>
+                
+               
+            </tbody>
+        </table>

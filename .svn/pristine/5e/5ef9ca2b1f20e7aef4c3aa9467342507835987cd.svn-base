@@ -1,0 +1,68 @@
+<?php
+require './iniPhp.php';
+$paramGene = new ClasseParamInit();
+// var_dump($paramGene->getJson());
+?>
+<!DOCTYPE html>
+<html >
+    <head>
+        <?php require_once  './fileInclude/heade.php'; ?>
+        
+        <style>
+            
+        </style>
+        <title>Accueil</title>
+    </head>
+    <body ng-app="appParamGene">
+
+            <?php include './fileInclude/barNavigation.php';?>
+        <div class="container">
+            
+            <div class="row">
+                    <h1>Parametres G&eacute;n&eacute;raux</h1>
+                    <a class="btn btn-default"  href="javascript:history.back();">retour</a>
+                    <a class="btn btn-default"  href="testTab.php.html">test tab</a>
+                    
+            </div>
+            <div class="col-md-12" ng-controller="ParamGeneCrt">
+                
+                <div >
+                    var1 = <input type="text" ng-model="var1" ng-change="change()" >
+                           
+                resultat = {{resultat}}
+                
+                var1 = {{var1}}
+                
+                </div>
+                
+                <div ng-repeat="param in ParamGene">
+                    {{param}}
+                </div>   
+                
+                
+            </div>
+            
+        </div>
+        
+        
+    <script>
+        var app = angular.module('appParamGene', []);
+
+       app.controller('ParamGeneCrt', function($scope) {
+           $scope.ParamGene = <?= $paramGene->getJson();?>;
+          console.log($scope.ParamGene);
+             
+             $scope.var1= 20;
+             $scope.resultat;
+            
+             
+             $scope.change = function(){
+                 $scope.resultat = $scope.var1*2;
+             };
+             
+             console.log($scope.resultat);
+        });
+      
+    </script>
+    </body>
+</html>

@@ -1,0 +1,70 @@
+<?php
+require './iniPhp.php';
+$outils = new ClasseOutils();
+//$liste = $outils->getInfoAllAnimatrices();
+$liste = $outils->getInfoAllAnimatrices();
+//echo $outils->getInfoAllAnimatricesJson();
+?>
+<!DOCTYPE html>
+<html >
+    <head>
+        <?php require_once  './fileInclude/heade.php'; ?>
+        <style>
+            ul.simple{
+                width: 100% ;
+            }
+            ul.simple li {
+                display:block;
+                width : 33%;
+                height : 34px;
+                float:left;
+            }
+            ul.simple li[float="left"] + li {
+                float:none;
+            }
+        </style>
+        <title>Accueil</title>
+    </head>
+    <body ng-app="appListAnim">
+
+            <?php include './fileInclude/barNavigation.php';?>
+        <div class="container" ng-controller="listAnimCrt" >
+            
+            <div class="row" style="height: 150px ">
+                    <h1>Liste des animatrices</h1>
+                    <div class="btn-group">
+                        <a class="btn btn btn-success"  href="editeAnimatrice.php?action=new"/>Nouvelle Animatrice</a>
+                        <a class="btn btn-default" href="javascript:history.back();">retour</a>
+                        <a class="btn btn btn-danger" style="text-align: right" 
+                           href="" >ne Pas CLiquer </a>
+                        
+                    </div>
+                    <span style="margin-left:  50px">rechercher <input type="text" ng-model="filtre" /></span>
+                   
+            </div>
+            <div class="col-md-12">
+                <ul class="simple">
+                    <li ng-repeat="anim in listAnim | filter : filtre">
+                        <a href="detailAnimatrice.php?id={{anim.id}}">
+                            {{anim.nom | uppercase}} {{anim.prenom}} - {{anim.label}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
+        
+    <script>
+       var app = angular.module('appListAnim', ['ui.bootstrap']);
+
+       app.controller('listAnimCrt', function($scope) {
+           $scope.listAnim = <?php echo $outils->getInfoAllAnimatricesJson(); ?>;
+   
+           
+
+           console.log($scope.listAnim);
+       });
+    </script>
+    </body>
+</html>
+

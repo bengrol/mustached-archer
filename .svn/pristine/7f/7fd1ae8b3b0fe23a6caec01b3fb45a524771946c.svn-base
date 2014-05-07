@@ -1,0 +1,21 @@
+<div class="row" id="prLigne">
+
+
+    <div class="col-md-9">
+        <h1><small>Nom : </small><?= $salarie->getNom(); ?> </h1>
+        <h2><small>Prenom : </small><?= $salarie->getPrenom(); ?></h2>
+        <h2><small>Statut : </small> <?= $salarie->getStatut(); ?> <small>Responsable : </small> <?= $salarie->getResponsable(); ?></h2>
+        <h3><small>Date entr&eacute;e : </small> <?= $salarie->getDateEntre(); ?></h3>
+    </div>
+
+    <div class="col-md-5">
+        <div class="btn-group">
+            
+            <a class="btn btn-primary"  href="editeAnimatrice.php?action=edit&id=<?= $salarie->getId(); ?>">editer info</a>
+            <a class="btn btn btn-success" href="animatrice.php"/>gerer équipe</a>
+            <a class="btn btn-default" href="animatrice.php">retour</a>
+            <a class="btn btn btn-danger"  href="" >déclarer sortie</a>
+        </div>
+    </div>
+
+</div>

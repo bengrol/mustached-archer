@@ -1,0 +1,126 @@
+<?php
+require './iniPhp.php';
+$outils = new ClasseOutils();
+//$liste = $outils->getInfoAllAnimatrices();
+$liste = $outils->getInfoAllAnimatrices();
+//echo $outils->getInfoAllAnimatricesJson();
+?>
+<html lang="fr">
+<head>
+     <?php require_once  './fileInclude/heade.php'; ?>
+  <meta charset="utf-8">
+  <title>jQuery UI Droppable - Default functionality</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <!--link rel="stylesheet" href="/resources/demos/style.css"-->
+  <style>
+      
+  .draggable { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
+  .droppable { width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; }
+  .droppable li {border-style: solid}
+  </style>
+  <script>
+  $(function() {
+      
+      
+      /* &&&&&&&&&&&&&  */
+    $( "#draggable li" ).draggable({
+        revert: "invalid" 
+    });
+
+
+    /* &&&&&&&&&&&&&  */
+    $( "#droppable" ).droppable({
+      drop: function(event, ui) {
+      var obj = ui.draggable.attr("data-id");
+      var zone = $(this).attr("date-id");
+     
+       $( "<li class=\"ui-widget-content\" data-id='3'><p></p></li>" ).text( ui.draggable.text() ).appendTo( this );
+        ui.draggable.remove();
+       
+       console.log('obj dropped ='+obj);
+       console.log('zone droppe = '+zone);
+      
+      chgEquipe(obj,zone);
+  }
+    });
+  });
+  
+  
+  function chgEquipe(id, equipe){
+      
+     var urlId = 'action/changeEquipe.php?';
+      urlId += 'id='+id;
+      urlId += '&equipe='+equipe;
+     
+     
+       $.ajax({
+            type: 'GET',
+            url: urlId,
+            timeout: 3000,
+            success: function() {
+                
+            },
+            error: function() {
+                alert('La requête n\'a pas abouti ');
+            }
+        });
+  }
+  
+  
+  </script>
+</head>
+<body>
+ <?php include './fileInclude/barNavigation.php';?>
+    
+<div class="container" >
+
+    <div class="row">
+        <h1>Accueil</h1>
+
+    </div>
+    <div class="col-md-6">
+        <div>
+            <h4>AR 2</h4>
+
+            <ul class="droppable" data-id="2" style="height: 300px ; border-style: solid">
+                <li data-id="10">
+                    <p>animatrice 3</p>
+                </li>
+
+                <li  data-id="11">
+                    <p>animatrice 4</p>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <h4>AR 3</h4>
+            <ul class="droppable" data-id="3" style="height: 300px ; border-style: solid">
+
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        
+        <ul class="droppable">
+            <li data-id="1">
+                <p>animatrice 1</p>
+            </li>
+
+            <li   data-id="2">
+                <p>animatrice 2</p>
+            </li>
+        </ul>
+    </div>
+
+</div>
+    
+    
+
+    
+
+    
+
+</body>
+</html>

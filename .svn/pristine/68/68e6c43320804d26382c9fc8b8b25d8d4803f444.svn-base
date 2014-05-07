@@ -1,0 +1,27 @@
+<?php
+
+?>
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td colspan="2" style="text-align: center">AUTRES GRATIFICATIONS OU FRAIS</td>
+        </tr>
+        <tr>
+            <td>Remb frais </td>
+            <td><?=$precompte->getRembFrais(); ?></td>
+        </tr>
+        <tr>
+            <td>Primes palier</td>
+            <td><?=$precompte->getPrimePalier() ?></td>
+        </tr>
+        <tr>
+            <td>Prime d'animation sur CA HT  groupe 4%</td>
+            <td><?=$precompte->getAutrePrime() ?></td>
+        </tr>
+       
+    </tbody>
+</table>
+
+
+

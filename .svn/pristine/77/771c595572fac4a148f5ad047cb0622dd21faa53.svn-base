@@ -1,0 +1,60 @@
+<?php
+class ClasseTest {
+        
+    function __construct() {
+       
+        
+        
+//        $PARAM_hote ="localhost";  $PARAM_nom_bd="paysystemDB"; $PARAM_utilisateur="root";
+//        $PARAM_mot_passe="root";
+//        
+//        try {
+//            $connexion = new PDO('mysql:host=' . $PARAM_hote . ';dbname=' . $PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+//            $prepare = $connexion->prepare("SELECT * FROM `salarie` WHERE `actif` =1;");
+//            $rs = $prepare->execute();
+//            $obj = $rs->fetchAll();  
+//
+//           // conversion en json  
+//            $json_output = json_encode($obj);
+//            var_dump($json_output);
+//            echo 'ok';
+//   
+//            
+//        } catch(Exception $e){ echo 'Erreur : '.$e->getMessage().'<br /> N° : '.$e->getCode(); }
+        
+  
+        
+    }
+    
+    public function getJson(){
+        try {  
+            $dbh = new PDO('mysql:host=localhost;dbname=paysystemDB','root','root');  
+
+            $rs = $dbh->query('SELECT * FROM `salarie`');  
+            $obj = $rs->fetchAll(PDO::FETCH_ASSOC);  
+
+             // conversion en json  
+           
+             $json_output = json_encode($obj);
+            var_dump($json_output);
+            echo 'ok';
+            
+            
+        }  
+        catch(PDOException $e) {  
+            echo $e->getMessage();  
+        } 
+        
+    }
+    
+    
+    
+    
+}
+
+
+$test1 = new ClasseTest();
+$test1->getJson();
+
+
+?>

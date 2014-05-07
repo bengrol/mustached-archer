@@ -1,0 +1,189 @@
+<?php
+require './iniPhp.php';
+//echo $outils->getAllStatutAnimJson();
+//echo json_encode($salarie->getInfoAnimatrice($id));
+//var_dump($outils->getInfoAllAnimatricesLite());
+
+//var_dump($_POST);
+    $outils = new ClasseOutils();
+    $salarie = new ClasseAnimatrice(0);
+
+    if($_POST['onCreate']!=NULL){
+        
+        $param = array(
+        'nom' => $_POST['nom'],
+        'prenom' => $_POST['prenom'],
+        'statutId' => $_POST['statutId'],
+        'idResponsable' => $_POST['idResponsable'],
+        'dateEntre' => $_POST['dateEntre']
+    );
+
+    echo 'Dernier ID = '.$salarie->createAnimatrice($param);
+        
+    }
+    
+    
+//    json_encode($salarie->getInfoAnimatrice($id));
+//    json_encode($outils->getInfoAllAnimatricesLite());
+
+?>
+<script src="./js/ui-bootstrap-tpls-0.10.0.min.js"></script>
+
+
+<form action="editeAnimatrice.php?action=new" method="POST" ng-app="formAnimApp">
+    <div class="row" id="prLigne"  ng-controller="formAnimCrt" >
+       <h1>Creation d'une fiche animatrice </h1>
+       <div>
+       <div class="btn-group">
+           <a class="btn btn btn-primary" style="text-align: right" 
+              href="index.php" >Annuler </a>
+           <a class="btn btn-default" href="javascript:history.back();">retour</a>
+           <input   class="btn btn btn-success" type="submit"  
+                    value="Sauvegarder Infos" name="onCreate"/>
+       </div>
+       </div>
+        <div class="col-md-6">
+            <input type="hidden" name="newAnim" >
+                <div class="form-group">
+                    <label for="inputNom">Nom :</label>
+                    <input type="text" name="nom"  class="form-control" id="inputNom" 
+                           placeholder="nom">
+                </div>
+                <div class="form-group">
+                    <label for="inputNom">Prenom :</label>
+                    <input type="text" class="form-control" 
+                           name="prenom"  placeholder="nom">
+                </div>
+
+            <div>
+                <span ng-repeat="st in listStatuAnim" >
+                    <label for="radio{{st.id}}">{{st.label }}</label>
+                    <input type="radio" id="radio{{st.id}}" name="statutId" 
+                           value="{{st.id}}"  ng-checked="checkItem(st.id)"  />
+                </span>
+            </div>
+            
+            <div class="form-group">
+
+                <label>Responsable :</label>
+
+                <select class="form-control" name="idResponsable"  >
+                    <option value='null'>Choisisez</option>
+                <?php 
+                    $tab = $outils->getInfoAllAnimatricesLite();
+                        for($i=0;$i<count($tab)-1;$i++ ) {
+                            echo '<option value="'.$tab[$i]->id.'"';
+                            if($tab[$i]->id == $salarie->getResponsableId()){
+                                echo 'selected >'.$tab[$i]->nom.' </option>';
+                            }else{
+                                echo '>'.$tab[$i]->nom.' </option>';
+                            }
+
+                        }
+                ?>
+                </select>
+
+
+            </div>
+            
+            
+            
+        </div>
+        <div class="col-md-6" >
+            <div ng-controller="DatepickerCtrl">
+                
+                 <div class="row">
+                     <div class="col-md-6">
+                         <h4>Date d'entr&eacute;e</h4>
+                         <p class="input-group">
+                             <input type="text" name="dateEntre" 
+                                    class="form-control" 
+                                    datepicker-popup="{{format}}" 
+                                    ng-model="dateEntre" 
+                                    is-open="opened"  
+                                    datepicker-options="dateOptions" 
+                                    date-disabled="disabled(date, mode)" 
+                                    ng-required="true" close-text="Close" />
+                             <span class="input-group-btn">
+                                 <button class="btn btn-default" ng-click="open($event)">
+                                     <i class="glyphicon glyphicon-calendar"></i></button>
+                             </span>
+                         </p>
+                         
+                     </div>
+                 </div>
+                 
+             </div>
+        </div>
+    </div>
+</form>
+
+<script>
+var app = angular.module('formAnimApp', ['ui.bootstrap']);
+    app.controller('formAnimCrt', function($scope) {
+                 
+        $scope.listStatuAnim = <?php echo $outils->getAllStatutAnimJson(); ?>;
+        $scope.anim = <?php  echo json_encode($salarie->getInfoAnimatrice($id)); ?>;
+    
+    
+        $scope.ListeReponsable = <?php echo json_encode($outils->getInfoAllAnimatricesLite());?> ;
+             
+        $scope.checkItem = function (id) {
+            var checked = false;
+            
+            if(id == 1){
+               checked = true;
+           }
+           return checked;    
+       };
+    
+});
+   
+  
+app.controller('DatepickerCtrl', function ($scope) {
+            $scope.today = function() {
+              $scope.dateEntre = new Date();
+          };
+            
+            $scope.today();
+
+            $scope.showWeeks = true;
+            $scope.toggleWeeks = function () {
+              $scope.showWeeks = ! $scope.showWeeks;
+            };
+
+            $scope.clear = function () {
+              $scope.dt = null;
+            };
+
+           // Disable weekend selection
+            $scope.disabled = function(date, mode) {
+              return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+            };
+
+            $scope.toggleMin = function() {
+              $scope.minDate = ( $scope.minDate ) ? null : new Date();
+            };
+            $scope.toggleMin();
+
+            $scope.open = function($event) {
+              $event.preventDefault();
+              $event.stopPropagation();
+
+              $scope.opened = true;
+            };
+
+            $scope.dateOptions = {
+              'year-format': "'yy'",
+              'starting-day': 1
+            };
+
+            $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd','dd/MM/yy', 'shortDate'];
+            $scope.format = $scope.formats[2];
+            
+          });
+</script>
+
+
+  
+  

@@ -1,0 +1,194 @@
+<?php
+require './iniPhp.php';
+$mois = new ClasseOutils();
+$paramInit = new ClasseParamInit();
+$path = "./fileInclude";
+
+if (isset($_GET['new'])) {
+    $path = "./newPrecompteInclude";
+    $precompte = new ClassePrecompte(array(
+            'id' => 0,
+            'new' => ok));
+}
+
+if (isset($_GET['edit'])) {
+    $path = "./newPrecompteInclude";
+    $idPre = array('id' => filter_input(INPUT_GET, 'edit', FILTER_SANITIZE_NUMBER_INT));
+    $precompte = new ClassePrecompte($idPre);
+ }
+
+if(isset($_GET['id'])){
+    $id = $_GET['id'];
+    $salarie = new ClasseAnimatrice($id); 
+        if($_GET['idPrecompte']!=null){
+            $idPre = array('id'=>filter_input(INPUT_GET, 'idPrecompte', FILTER_SANITIZE_NUMBER_INT));       
+            $precompte = new ClassePrecompte($idPre);
+          }
+}
+  //echo $precompte->getJson2(); 
+  //var_dump($precompte);
+
+?>
+<!DOCTYPE html>
+<html >
+    <head>
+        <title>Feuille de precompte <?= $salarie->getNom()  ?></title>
+        <?php include './fileInclude/heade.php'; ?>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    </head>
+    <body ng-app="monApp">
+       <div ng-controller="ObjCrt" > 
+        <?php include './fileInclude/barNavigation.php'; ?>
+       <form action="detailAnimatrice.php?id=<?= $id ?>" method="POST" >
+        <div class="container">  
+            <div class="row"> 
+                <div class="col-md-6">
+                   <h2><?= $salarie->getNom() ?></h2>
+                   <div style="margin: 20px">
+            <?php
+                if (isset($_GET['new'])) {
+                    echo' <input class="btn btn-primary" type = "submit" name="new" value = "sauvegarder" />'
+                    . '<a class="btn btn-default"  href="javascript:history.back();">retour</a>';
+
+                }
+                if (isset($_GET['edit'])) {
+                        echo '<h3>Edition</h3>';
+                        ?>
+                    <input class="btn btn-primary" type = "submit" name="action" value = "update" />
+                    <a class="btn btn-danger" href="detailAnimatrice.php?id=<?= $salarie->getId() ?>&action=supp&idPrecompte=<?= $precompte->getIdPrecompte() ?>">supprimer </a>
+                    <a class="btn btn-default"  href="javascript:history.back();">retour</a>
+            <?php
+                }
+            if (isset($_GET['new'])|| isset($_GET['edit'])) {
+                $listeStatut  = $mois->getAllStatutPrecompte();
+            }
+            ?> 
+                    </div>
+                   <label>Statut : </label>
+                   <select name="idStatutPrecompteIndex">       
+            <?php   
+                foreach ($listeStatut as $value) {  ?>
+                       <option  value="<?=$value['idStatutPrecompte']?>"
+                            <?php 
+                            if($value['idStatutPrecompte']==$precompte->getIdStatutPrecompteIndex()){ echo(' selected '); }
+                            ?>
+                            
+                            >
+                        <?=$value['labelPrecompte']?>
+                    </option>
+            <?php    }
+            ?>  
+                   
+                   </select>
+                </div>
+                <div class="col-md-6">
+                    <?php 
+                        if(isset($_GET['new'])| isset($_GET['edit'])){
+                           include $path . '/tabParametre.php';
+                       }              
+                     ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <?php include $path . '/tableauPrecompte.php'; ?> <br/>
+                     <?php include $path . '/commisionsFO.php'; ?> <br/>
+                     <?php include $path . '/commisionsCarte.php'; ?><br/> 
+
+                    
+                </div>
+                <div class="col-md-6">
+                    
+                    <?php include $path . '/commisionsCA.php'; ?> <br/>
+                    <?php include $path . '/commisionsFrais.php'; ?> <br/>
+                    <?php include $path . '/gratificationFrais.php'; ?>
+                    
+                </div>
+            </div>
+            <input type="hidden" name="idPrecompte" value="<?=filter_input(INPUT_GET, 'edit', FILTER_SANITIZE_NUMBER_INT)?>"/>
+            </form> 
+            </div>
+        </div>
+        <script>
+                var app =angular.module('monApp',['ui.bootstrap']);
+                
+               app.controller('ObjCrt',function ($scope){
+                   
+               console.log('<?php echo $precompte->getJson(); ?>');
+               
+                $scope.objs = <?php echo $precompte->getJson(); ?>;
+                <?php
+                    if (isset($_GET['new'])) { ?>
+                       var paramIniJson = <?php echo $paramInit->getJson();?>;
+                          $scope.objs = paramIniJson;
+                          
+                          $scope.objs.nbMBP=0;
+                          $scope.objs.nbArguBinome=0;
+                          $scope.objs.annulationHT=0;
+                          $scope.objs.rembourseFrais=0;
+                          $scope.objs.PrimeAnimation=0;
+                          $scope.objs.PrimePalier=0;
+                          $scope.objs.autrePrime=0;
+                <?php
+                    }
+                 ?>
+                         
+$scope.txTVA2 = ($scope.objs.txTVA*1) +1;
+
+$scope.totalFO = $scope.objs.nbFOrecu - $scope.objs.nbFOretour;
+$scope.CAMBPHT = $scope.objs.nbMBP * $scope.objs.comMBP *2;
+$scope.CAMBPTTC = $scope.CAMBPHT * $scope.txTVA2;
+$scope.CATTC = $scope.objs.CA_HT * $scope.txTVA2 ;
+$scope.annulationTTC = $scope.objs.annulationHT * $scope.txTVA2;
+$scope.totalComCaTTC = $scope.CATTC  - $scope.annulationTTC - $scope.CAMBPTTC;
+$scope.totalComCaHT = $scope.objs.CA_HT  - $scope.objs.annulationHT - $scope.CAMBPHT;
+
+$scope.efficacite = ($scope.objs.nbVente*100)/(($scope.objs.nbFOrecu * 1)-(1 * $scope.objs.nbFOretour));
+$scope.panierMoyen = $scope.CATTC /$scope.objs.nbVente ;
+$scope.comFOTxPlein = $scope.objs.comArgusTxPlein * $scope.totalFO;
+$scope.comFOTxReduit = $scope.objs.comArgusTxReduit * $scope.objs.nbArguBinome;
+$scope.totalComFO = $scope.comFOTxPlein + $scope.comFOTxReduit;
+$scope.totalComMBP = $scope.objs.nbMBP * $scope.objs.comMBP ;
+$scope.totalComCA = $scope.totalComCaHT * $scope.objs.TxComCAHT;
+$scope.totalGratification = ($scope.objs.rembourseFrais*1) +($scope.objs.PrimePalier*1) + ($scope.objs.PrimeAnimation*1) + ($scope.objs.autrePrime*1);
+$scope.totalGeneral = ($scope.totalComFO*1) + ($scope.totalComMBP*1) + ($scope.totalComCA*1) + ($scope.totalGratification*1);                 
+                 
+                 
+                 $scope.change = function(){
+                    $scope.totalFO = $scope.objs.nbFOrecu - $scope.objs.nbFOretour;
+                    $scope.CAMBPHT = $scope.objs.nbMBP * $scope.objs.comMBP *2;
+                    $scope.CAMBPTTC = $scope.CAMBPHT * $scope.txTVA2;
+                    $scope.CATTC = $scope.objs.CA_HT * $scope.txTVA2 ;
+                    $scope.annulationTTC = $scope.objs.annulationHT * $scope.txTVA2;
+                    $scope.totalComCaTTC = $scope.CATTC  - $scope.annulationTTC - $scope.CAMBPTTC;
+                    $scope.totalComCaHT = $scope.objs.CA_HT  - $scope.objs.annulationHT - $scope.CAMBPHT;
+                    $scope.efficacite = ($scope.objs.nbVente*100)/(($scope.objs.nbFOrecu * 1)-(1 * $scope.objs.nbFOretour));
+                    $scope.panierMoyen = $scope.CATTC /$scope.objs.nbVente ;
+                    $scope.comFOTxPlein = $scope.objs.comArgusTxPlein * $scope.totalFO;
+                    $scope.comFOTxReduit = $scope.objs.comArgusTxReduit * $scope.objs.nbArguBinome;
+                    $scope.totalComFO = $scope.comFOTxPlein + $scope.comFOTxReduit;
+                    $scope.totalComMBP = $scope.objs.nbMBP * $scope.objs.comMBP ;
+                    $scope.totalComCA = $scope.totalComCaHT * $scope.objs.TxComCAHT;
+                   
+                    $scope.totalGratification = ($scope.objs.rembourseFrais*1) +($scope.objs.PrimePalier*1) + ($scope.objs.PrimeAnimation*1) + ($scope.objs.autrePrime*1);
+                    $scope.totalGeneral = ($scope.totalComFO*1) + ($scope.totalComMBP*1) + ($scope.totalComCA*1) + ($scope.totalGratification*1);
+
+
+             };
+             
+                 
+                 
+                 
+               console.log($scope.objs);
+               });
+        </script>
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script>
+                $(function() {
+                  $( document ).tooltip();
+                });
+        </script>
+    </body>
+</html>
+ 

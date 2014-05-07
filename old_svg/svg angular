@@ -1,0 +1,34 @@
+<script>
+            
+            
+            
+            
+            
+    angular.module("aniDetailApp", ['ui.bootstrap'])
+        .controller("aniDetailCtrl", function($scope, $http) {
+            $scope.myData = {};
+            $scope.myData.doEdit = function(item, event) {
+
+                var responsePromise = $http.get("formAnimatrice.php?id=<?=$salarie->getId();?>");
+
+                responsePromise.success(function(data, status, headers, config) {
+                    $scope.myData.fromServer = data;
+                    
+                    var target = document.getElementById('prLigne');
+                    console.log(target);
+                    target.innerHTML=data;
+                    
+                });
+                responsePromise.error(function(data, status, headers, config) {
+                    alert("AJAX failed!");
+                });
+            }
+            $scope.listAnim = <?php echo $outils->getInfoAllAnimatricesJson(); ?>;
+            console.log($scope.listAnim);
+            
+    $scope.selected = undefined;
+    $scope.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
+            
+$scope.var1="hello";
+        } );
+  </script>

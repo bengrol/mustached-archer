@@ -1,0 +1,57 @@
+<?php
+require './iniPhp.php';
+$listePrecompte = new ClasseOutils();
+ // var_dump($listePrecompte->getAllPrecompteExportJson(1));
+?>
+
+<html >
+    <head>
+        <?php require_once './fileInclude/heade.php'; ?>
+
+        <title>Listing Export</title>
+    </head>
+    <body ng-app="appListing">
+        <?php include './fileInclude/barNavigation.php'; ?>
+        <div class="container" ng-controller="listingCrt">
+            <div class="row">
+                <h1>Liste des Bordereaux</h1>
+                <a class="btn btn-default"  href="javascript:history.back();">retour</a>
+                rechercher <input type="text" ng-model="filtre" />
+            </div>
+            <div class="col-md-6">
+                <h2>pret pour l'export</h2>
+                <ul>
+                    <li ng-repeat="li in listingOk | filter :filtre">
+                        <a href="precompteAnimatrice.php?id={{li.idSalarie}}&edit={{li.idPrecompte}}">
+                            {{li.nom}} - num : {{li.idPrecompte}} du  {{li.datePrecompte}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="col-md-6">
+                <h2>incomplet</h2>
+                <ul>
+                    <li ng-repeat="li in listingIncomplet | filter :filtre">
+                        <a href="precompteAnimatrice.php?id={{li.idSalarie}}&edit={{li.idPrecompte}}">
+                            {{li.nom}} - num : {{li.idPrecompte}} du  {{li.datePrecompte}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        
+        <script>
+            var app = angular.module('appListing', ['ui.bootstrap']);
+
+            app.controller('listingCrt', function($scope) {
+                $scope.listingOk = <?php echo $listePrecompte->getAllPrecompteExportJson(2); ?>;
+                $scope.listingIncomplet = <?php echo $listePrecompte->getAllPrecompteExportJson(1); ?>;
+
+                console.log($scope.listing);
+            });
+        </script>
+
+    </body>
+</html> 

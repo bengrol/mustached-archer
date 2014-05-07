@@ -1,0 +1,82 @@
+<?php
+//$paramInit = new ClasseParamInit();
+
+
+
+
+$cahtMbp = ($precompte->getNbMBP() * ($precompte->getComMBP()*2));
+$cattc = round(($precompte->getCAmois()*($precompte->getTxTVA()+1)),2);
+$cattcMbp  =  round($cahtMbp * ($precompte->getTxTVA() +1),2);
+$nbFoValide = $precompte->getNbFOValide() != null ? round(($precompte->getNbVente()/$precompte->getNbFOValide()*100),0) :'';
+
+$panierMoyen = $precompte->getNBVente() !=null?round(($cattc/$precompte->getNbVente()),2) : ""; 
+$CAHTvalide = $precompte->getCAmois()-$cahtMbp;
+?>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script>
+  $(function() {
+    $( document ).tooltip();
+  });
+  </script>
+  
+  <table class="table">
+
+      <tbody>
+          <tr>
+              <td colspan="4" style="text-align: center">COMMISSION SUR CA</td>
+              <td >
+                  <a  title=" <?= $precompte->getTxComCAHT() * 100 ?> % calcul&eacute; sur le C.A H.T ">
+                      <strong><?= round($CAHTvalide * $precompte->getTxComCAHT(), 2) ?>  &euro;<strong>
+                              </a>
+                              </td>
+                              </tr>
+                              <tr>
+                                  <td></td>
+                                  <td>CA</td>
+                                  <td>Annul.</td>
+                                  <td>CA MBP</td>
+                                  <td>TOTAL</td>
+                              </tr>
+                              <tr>
+                                  <td>TTC</td>
+                                  <td><?= $cattc ?> &euro;</td>
+                                  <td></td>
+                                  <td><?= $cattcMbp ?> &euro;</td>
+                                  <td><?= $cattc - $cattcMbp; ?> &euro;</td>
+
+                              </tr>
+                              <tr>
+                                  <td>HT</td>
+                                  <td><?= $precompte->getCAmois(); ?> &euro;</td>
+                                  <td></td>
+                                  <td><?= $cahtMbp ?> &euro;</td>
+                                  <td><?= $CAHTvalide ?> &euro;</td>
+                              </tr>
+                              <tr>
+                                  <td>nb Vente</td>
+                                  <td><?= $precompte->getNbVente(); ?></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+
+                              </tr>
+                              <tr>
+                                  <td>efficacit&eacute; </td>
+                                  <td><?= $nbFoValide ?> %</td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                              </tr>
+                              <tr>
+                                  <td>Panier moyen</td>
+                                  <td><?= $panierMoyen ?> &euro;</td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                              </tr>
+
+                              </tbody>
+                              </table>

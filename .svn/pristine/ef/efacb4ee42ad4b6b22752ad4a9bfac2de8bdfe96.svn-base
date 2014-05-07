@@ -1,0 +1,79 @@
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Droppable - Default functionality</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <!--link rel="stylesheet" href="/resources/demos/style.css"-->
+  <style>
+  #draggable { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
+  #droppable { width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; }
+  </style>
+  <script>
+  $(function() {
+      
+      
+      /* &&&&&&&&&&&&&  */
+    $( "#draggable div" ).draggable({
+        revert: "invalid" 
+    });
+
+
+    /* &&&&&&&&&&&&&  */
+    $( "#droppable" ).droppable({
+      drop: function(event, ui) {
+      var obj = ui.draggable.attr("data-id");
+      var zone = $(this).children("div").attr("date-id");
+      chgEquipe(obj,zone);
+  }
+    });
+  });
+  
+  
+  function chgEquipe(id, equipe){
+      
+     var urlId = 'action/changeEquipe.php?';
+      urlId += 'id='+id;
+      urlId += '&equipe='+equipe;
+     
+     
+       $.ajax({
+            type: 'GET',
+            url: urlId,
+            timeout: 3000,
+            success: function() {
+                
+            },
+            error: function() {
+                alert('La requête n\'a pas abouti ');
+            }
+        });
+  }
+  
+  
+  </script>
+</head>
+<body>
+
+    <div id="draggable">
+        <div   class="ui-widget-content" data-id="1">
+            <p>Drag me to my target</p>
+        </div>
+
+        <div   class="ui-widget-content" data-id="2">
+            <p>Drag me to my target</p>
+        </div>
+    </div>
+    <a href="action/changeEquipe.php"></a>
+
+    
+    <div id="droppable" >
+        <div class="ui-widget-header" date-id="4">
+            <p>DropZone</p>
+            </div>
+        </div>
+    
+
+</body>
+</html>

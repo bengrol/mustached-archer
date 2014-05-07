@@ -1,0 +1,150 @@
+<?php
+
+class ClasseParamInit {
+    private $connexion;
+    private $comMBP;
+    private $TxComCAHT;
+    private $comArgusTxPlein;
+    private $comArgusTxReduit;
+    private $TxComDR;
+    private $TxComAR;
+    private $seuilComFO;
+    private $maxFObinome;
+    private $fixeManager;
+    private $txTVA;
+    
+    function __construct() {
+        $cnx = new ClasseOutils();
+        $this->connexion = $cnx->connection();
+        $prepare = $this->connexion->prepare("SELECT * FROM `paramInit` ");
+        $prepare->execute();
+        $param = $prepare->fetch(PDO::FETCH_ASSOC);
+        //var_dump($param);
+        $this->comMBP=$param['comMBP'];
+        $this->TxComCAHT=$param['TxComCAHT'];
+        $this->comArgusTxPlein=$param['comArgusTxPlein'];
+        $this->comArgusTxReduit=$param['comArgusTxReduit'];
+        $this->TxComDR=$param['TxComDR'];
+        $this->TxComAR=$param['TxComAR'];
+        $this->seuilComFO=$param['seuilComFO'];
+        $this->maxFObinome=$param['maxFObinome'];
+        $this->fixeManager=$param['fixeManager'];
+        $this->txTVA=$param['txTVA'];
+    }
+    
+        public function getJson(){
+        $outil = new ClasseOutils();  $this->conx = $outil->connection();
+        $prepare = $this->conx->prepare("SELECT * FROM `paramInit` ");
+        $prepare->execute(array('id' => $this->idPrecompte));
+        
+        $obj = $prepare->fetch(PDO::FETCH_ASSOC);  
+        //var_dump($obj);
+        return json_encode($obj);
+    }
+    
+    public function updateInfo($param) {
+        $query = "UPDATE `paramInit` SET "
+                . "`comMBP`= ".$param['comMBP']." ,"
+                . "`txComFraisFO`= ".$param['txComFraisFO'].","
+                . "`TxComCAHT`= ".$param['TxComCAHT'].","
+                . "`comArgusTxPlein`=".$param['comArgusTxPlein'].","
+                . "`comArgusTxReduit`= ".$param['comArgusTxReduit']." ,"
+                . "`TxComDR`= ".$param['TxComDR']."  ,"
+                . "`TxComAR`= ".$param['TxComAR']." ,"
+                . "`seuilComFO`= ".$param['seuilComFO']." ,"
+                . "`maxFObinome`= ".$param['maxFObinome']." ,"
+                . "`fixeManager`=  ".$param['fixeManager'].","
+                . "`txTVA`= ".$param['txTVA']." ";
+        
+        $outil = new ClasseOutils();  
+        $this->conx = $outil->connection();
+        $prepare = $this->conx->prepare($query);
+        $prepare->execute();
+        }
+
+    public function getComMBP() {
+        return $this->comMBP;
+    }
+
+    public function getTxComCAHT() {
+        return $this->TxComCAHT;
+    }
+
+    public function getComArgusTxPlein() {
+        return $this->comArgusTxPlein;
+    }
+
+    public function getComArgusTxReduit() {
+        return $this->comArgusTxReduit;
+    }
+
+    public function getTxComDR() {
+        return $this->TxComDR;
+    }
+
+    public function getTxComAR() {
+        return $this->TxComAR;
+    }
+
+    public function getSeuilComFO() {
+        return $this->seuilComFO;
+    }
+
+    public function getMaxFObinome() {
+        return $this->maxFObinome;
+    }
+
+    public function getFixeManager() {
+        return $this->fixeManager;
+    }
+
+    public function getTxTVA() {
+        return $this->txTVA;
+    }
+
+    public function setComMBP($comMBP) {
+        $this->comMBP = $comMBP;
+    }
+
+    public function setTxComCAHT($TxComCAHT) {
+        $this->TxComCAHT = $TxComCAHT;
+    }
+
+    public function setComArgusTxPlein($comArgusTxPlein) {
+        $this->comArgusTxPlein = $comArgusTxPlein;
+    }
+
+    public function setComArgusTxReduit($comArgusTxReduit) {
+        $this->comArgusTxReduit = $comArgusTxReduit;
+    }
+
+    public function setTxComDR($TxComDR) {
+        $this->TxComDR = $TxComDR;
+    }
+
+    public function setTxComAR($TxComAR) {
+        $this->TxComAR = $TxComAR;
+    }
+
+    public function setSeuilComFO($seuilComFO) {
+        $this->seuilComFO = $seuilComFO;
+    }
+
+    public function setMaxFObinome($maxFObinome) {
+        $this->maxFObinome = $maxFObinome;
+    }
+
+    public function setFixeManager($fixeManager) {
+        $this->fixeManager = $fixeManager;
+    }
+
+    public function setTxTVA($txTVA) {
+        $this->txTVA = $txTVA;
+    }
+
+   
+    
+    
+    
+    
+}

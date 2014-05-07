@@ -1,0 +1,60 @@
+<?php
+//
+
+?>
+
+<table class="table" >
+            
+            <tbody>
+                <tr>
+                    <td colspan="2" style="text-align: center" >PRECOMPTE DU <?php echo(strtoupper ($precompte->getDatePrecompte())); ?></td>
+                    
+                </tr>
+                <tr>
+                    <td>Date entree</td>
+                    <td><?=$salarie->getDateEntre();?></td>
+                    
+                </tr>
+                <tr>
+                    <td>Statut</td>
+                    <td><?=$salarie->getStatut();?></td>
+                    
+                </tr>
+                <tr>
+                    <td>Nombre de Jours travaill&eacute;s d&eacute;clar&eacute;s</td>
+                    <td><?=$precompte->getNbJourTravaille();?></td>
+                    
+                </tr>
+                
+                <tr>
+                    <td>Nombre de FO annonc&eacute;es au responsable</td>
+                    <td><?=$precompte->getNbFOAnnonce();?></td>
+                    
+                </tr>
+                <tr>
+                    <td>Nombre de FO reçues</td>
+                    <td><?=$precompte->getNbFORecu();?></td>
+                </tr>
+                <tr>
+                    <td>Nombre de FO retourn&eacute;es</td>
+                    <td><?=$precompte->getNbFORetourne();?></td>
+                    
+                </tr>
+                <tr>
+                    <td >Nombre de FO valid&eacute;es sur le mois en cours</td>
+                    <td><?=$precompte->getNbFOValide();?></td>
+                    
+                </tr>
+               <!-- <tr>
+                    <td>Nombre de FO mois pr&eacute;c&eacute;dent</td>
+                    <td></td>
+                    
+                </tr>-->
+                <tr>
+                    <td>TOTAL FO</td>
+                    <td><?=$precompte->getNbFOValide();?></td>
+                    
+                </tr>
+               
+            </tbody>
+        </table>

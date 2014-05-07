@@ -1,0 +1,225 @@
+<?php
+require './iniPhp.php';
+$mois = new ClasseOutils();
+$outils = new ClasseOutils();
+$liste = $outils->getInfoAllAnimatrices();
+
+if($_POST!=null){
+    
+    if($_POST['updateAnim']!=null){
+        
+        //var_dump($_POST);
+        $id = intval(filter_input(INPUT_POST,'updateAnim', FILTER_SANITIZE_NUMBER_INT ));
+        $salarie = new ClasseAnimatrice($id); 
+        $liste = array(
+            'id'=> $id,
+            'nom' => filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_STRING),
+            'prenom' => filter_input(INPUT_POST, 'prenom', FILTER_SANITIZE_STRING),
+            'statutId' => filter_input(INPUT_POST, 'statutId', FILTER_SANITIZE_NUMBER_INT),
+            'idResponsable' => filter_input(INPUT_POST, 'idResponsable', FILTER_SANITIZE_NUMBER_INT),
+            'dateEntre' => filter_input(INPUT_POST, 'dateEntre', FILTER_SANITIZE_STRING)
+        );
+        
+        $salarie->updateInfo($liste);
+        $salarie = new ClasseAnimatrice($id);
+    }
+    if($_POST['newAnim']!=null){
+        
+        
+        
+        
+    }
+    
+    
+    $liste= array(
+        'id'=>intval(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT)),
+        'nbJourDeclare'=> filter_input(INPUT_POST, 'nbJourDeclare', FILTER_SANITIZE_NUMBER_INT),
+        'nbFOannonce'=> filter_input(INPUT_POST, 'nbFOannonce', FILTER_SANITIZE_NUMBER_INT),
+        'nbFOrecu'=> filter_input(INPUT_POST, 'nbFOrecu', FILTER_SANITIZE_NUMBER_INT),
+        'nbFOretour'=> filter_input(INPUT_POST, 'nbFOretour', FILTER_SANITIZE_NUMBER_INT),
+        'CA_HT'=> floatval($_POST['CA_HT']),
+        'nbVente'=> filter_input(INPUT_POST, 'nbVente', FILTER_SANITIZE_NUMBER_INT),
+        'commisionFrais'=> filter_input(INPUT_POST, 'commisionFrais', FILTER_SANITIZE_NUMBER_FLOAT),
+        'nbArguPerso'=> filter_input(INPUT_POST, 'nbArguPerso', FILTER_SANITIZE_NUMBER_INT),
+        'nbArguBinome'=> filter_input(INPUT_POST, 'nbArguBinome', FILTER_SANITIZE_NUMBER_INT),
+        'nbMBP'=> filter_input(INPUT_POST, 'nbMBP', FILTER_SANITIZE_NUMBER_INT),
+        'rembourseFrais'=> floatval($_POST['rembourseFrais']),
+        'PrimePalier'=> floatval($_POST['PrimePalier']),
+        'PrimeAnimation'=> floatval($_POST[ 'PrimeAnimation']),
+        'annulationHT'=> floatval($_POST[ 'annulationHT']),
+        'autrePrime'=> floatval($_POST[ 'autrePrime']),
+        'editable'=> filter_input(INPUT_POST, 'editable', FILTER_SANITIZE_NUMBER_INT),
+        'comMBP'=> floatval($_POST['comMBP']),
+        'TxComCAHT'=> floatval($_POST['TxComCAHT']),
+        'comArgusTxPlein'=> floatval($_POST['comArgusTxPlein']),
+        'comArgusTxReduit'=> floatval($_POST['comArgusTxReduit']), 
+        'TxComDR'=> floatval($_POST['TxComDR']),
+        'TxComAR'=> floatval($_POST['TxComAR']), 
+        'seuilComFO'=> floatval($_POST['seuilComFO']),
+        'maxFObinome'=> filter_input(INPUT_POST,  'maxFObinome', FILTER_SANITIZE_NUMBER_INT),
+        'fixeManager'=> floatval($_POST[ 'fixeManager']),
+        'txTVA'=> floatval($_POST[ 'txTVA']), 
+        'comFraisFO'=> floatval($_POST['comFraisFO']),
+        'idStatutPrecompteIndex'=> filter_input(INPUT_POST, 'idStatutPrecompteIndex', FILTER_SANITIZE_NUMBER_INT),
+        'txComFraisFO'=> floatval($_POST['txComFraisFO']),
+        'ObservPrimePalier'=> strval($_POST['ObservPrimePalier']),
+        'ObservRembFrais'=> filter_input(INPUT_POST,'ObservRembFrais', FILTER_SANITIZE_STRING),
+        'ObservAutrePrime'=> filter_input(INPUT_POST,'ObservAutrePrime', FILTER_SANITIZE_STRING)
+            );
+       // echo'etape 1';
+     //   var_dump($liste);
+        
+        if ($_POST['action'] =='update') {
+            // echo 'UPDATE ';
+        try {
+            $precompte = new ClassePrecompte(array(
+                'id'=>$liste['id']
+            ));
+            
+            $precompte->updatePrecompte($liste, filter_input(INPUT_POST, 'idPrecompte', FILTER_SANITIZE_NUMBER_INT));
+            // echo 'UPDATE OK';
+            
+            
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    } else {
+        $newPrecompte = new ClassePrecompte(0);
+        $newPrecompte->createPrecompte($liste);
+    }
+}
+
+if (isset($_GET['action'])) {
+    
+     $intValId = intval(filter_input(INPUT_GET, 'idPrecompte', FILTER_SANITIZE_NUMBER_INT));
+    if ($_GET['action'] == 'supp') {
+        try {
+           $mois->supprimePrecompte($intValId);
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
+}
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $salarie = new ClasseAnimatrice($id);
+    
+            
+}
+
+//echo 'get';
+//var_dump($_GET);
+//echo 'post';
+// var_dump($_POST);
+
+?>
+<!DOCTYPE html>
+<html >
+    <head>
+        <title>Detail compte <?= $salarie->getNom(); ?> </title>
+        <?php include './fileInclude/heade.php'; ?>
+        <script src="./angular/js/bootstrap.js"></script> 
+    </head>
+    <body ng-app="aniDetailApp">
+
+        <?php include './fileInclude/barNavigation.php'; ?>
+
+        <div class="container" ng-controller="aniDetailCtrl">
+            <div class="panel panel-default">
+                <div class="panel-heading ">
+                    <h1>Fiche animatrice</h1>
+                </div>
+                <div class="panel-body">
+                    <?php include './civiliteAnimatrice.php'; ?>
+                    
+                    <div class="panel  col-md-12">
+                        <div class="btn-group btn-group-justified">
+                            <a class="btn btn-default"  href="editeAnimatrice.php?action=edit&id=<?= $salarie->getId(); ?>">editer info</a>
+                            <a class="btn btn-default" href="animatrice.php">gerer équipe</a>
+                            <a class="btn btn-default" href="animatrice.php">retour</a>
+                            <a class="btn btn-default"  href="" >déclarer sortie</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 alert-info">
+                        <h4>liste Bordereau</h4>
+                            <ul>
+                                <li >
+                                    <a  href="precompteAnimatrice.php?id=<?= $salarie->getId() ?>&new" ><strong>Creer nouveau precompte</strong></a>
+                                </li>
+                                <?php
+                                if (($salarie->getListePrecompte()) != null) {
+                                    foreach ($salarie->getListePrecompte() as $precompte) {
+                                        echo('<li ><a style="margin-right:10px" href="precompteAnimatrice.php?id=' . $salarie->getId() . '&idPrecompte=' . $precompte['idPrecompte'] . '">'
+                                        . ' Bordereau N° ' . $precompte['idPrecompte'] . ' '
+                                        . 'du ' . $precompte['DateForm'] . ''
+                                        . '</a>');
+                                        if ($precompte['editable'] == 1) {
+                                            echo '<a style="margin-right:10px" class="btn btn btn-danger"  href="detailAnimatrice.php?id='.$salarie->getId().'&action=supp&idPrecompte='.$precompte['idPrecompte'].'">'
+                                            . 'supprimer</a><a class="btn btn btn-primary" href="precompteAnimatrice.php?id='. $salarie->getId().'&edit='. $precompte['idPrecompte'].'" >Editer</a></li>';
+
+
+                                        } else {
+                                            echo '</li>';
+                                        }
+                                    }
+                                } else {
+                                    echo('Pas de precompte');
+                                }
+                                ?>
+
+                            </ul>
+                    </div>
+                    
+                    <div class="col-md-6  alert-warning">
+                    <h4>&eacute;quipe </h4>
+                    <ul>
+                        <?php
+
+                        if (($salarie->getListeEquipe()) != null) {
+                            foreach ($salarie->getListeEquipe() as $equipe) {
+                                echo('<li><a href="detailAnimatrice.php?id='.$equipe['id'].'"> '
+                                        .$equipe['nom'].' - '
+                                        .$equipe['prenom'].'</a></li>');
+                                }
+                        } else {
+                            echo('<p>Pas de membre</p>');
+                        }
+                        ?>
+
+                    </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+    angular.module("aniDetailApp", ['ui.bootstrap'])
+        .controller("aniDetailCtrl", function($scope, $http) {
+            $scope.myData = {};
+            $scope.myData.doEdit = function(item, event) {
+
+                var responsePromise = $http.get("formAnimatrice.php?id=<?=$salarie->getId();?>");
+
+                responsePromise.success(function(data, status, headers, config) {
+                    $scope.myData.fromServer = data;
+                    
+                    var target = document.getElementById('prLigne');
+                    console.log(target);
+                    target.innerHTML=data;
+                    
+                });
+                responsePromise.error(function(data, status, headers, config) {
+                    alert("AJAX failed!");
+                });
+            }
+            $scope.listAnim = <?php echo $outils->getInfoAllAnimatricesJson(); ?>;
+            console.log($scope.listAnim);
+   
+        } );
+  </script>
+      
+        
+    </body>
+</html>
+
